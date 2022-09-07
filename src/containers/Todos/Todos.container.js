@@ -2,11 +2,6 @@ import {
   Container,
   HStack,
   VStack,
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Button,
   Table,
   TableContainer,
   Thead,
@@ -17,19 +12,9 @@ import {
   Box,
   Spinner
 } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
-import {
-  useMutation,
-  useQuery,
-  useQueryClient
-} from '@tanstack/react-query';
 
-import todoService from '../../services/todoService';
+import { TodoForm } from '../../components'
 import useTodosPresenter from './Todos.presenter';
-
-const FIELDS = {
-  NAME: 'todoname'
-};
 
 const Todos = () => {
   const {
@@ -38,42 +23,13 @@ const Todos = () => {
     isFetching,
     submit
   } = useTodosPresenter();
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    reset
-  } = useForm();
 
   return (
     <>
       <Container p={4} minWidth="90%">
         <HStack alignItems={'start'}>
           {/* Form Area */}
-          <VStack
-            flex={1}
-            borderWidth={1}
-            p={4}
-            borderRadius={4}
-            spacing={4}
-            boxShadow={2}
-          >
-            <FormControl isInvalid={!!errors[FIELDS.NAME]?.message}>
-              <FormLabel>To Do Name</FormLabel>
-              <Input {...register(FIELDS.NAME, { required: 'Wajib diisi!' })} />
-              <FormErrorMessage>{errors[FIELDS.NAME]?.message}</FormErrorMessage>
-            </FormControl>
-
-            <Button
-              width={'100%'}
-              bgColor="red.500"
-              color="white"
-              onClick={handleSubmit(submit)}
-              isLoading={isLoading}
-            >
-              Submit
-            </Button>
-          </VStack>
+          <TodoForm isLoading={isLoading} submit={submit} />
 
           <Box width={2} />
 

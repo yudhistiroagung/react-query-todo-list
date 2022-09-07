@@ -4,7 +4,7 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 
-import todoService from '../services/todoService';
+import todoService from '../../services/todoService';
 
 const useTodosPresenter = () => {
   const qClient = useQueryClient();
@@ -14,16 +14,15 @@ const useTodosPresenter = () => {
     staleTime: 3000
   });
 
-  const mutation = useMutation(todoService.addTodo, {
-    onSuccess: () => {
-      qClient.invalidateQueries(['todos']);
-    },
-    onError: (err) => {
-      console.log('ERROR', err);
-    }
-  });
+  const mutation = useMutation(todoService.addTodo);
 
-  const submit = (data) => mutation.mutate(data);
+  const submit = (data, onSuccess) => mutation.mutate(data, {
+    onSuccess: async () => {
+      qClient.invalidateQueries('todos');
+      if (onSuccess) onSuccess()
+    },
+    onError: () => { }
+  });
 
   return {
     todos,
