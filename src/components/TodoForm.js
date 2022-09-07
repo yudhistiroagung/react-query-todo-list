@@ -6,7 +6,9 @@ import {
   FormErrorMessage,
   Button
 } from '@chakra-ui/react';
+import { v4 } from 'uuid';
 import { useForm } from 'react-hook-form';
+import { TODO_STATUS } from '../constants';
 
 const FIELDS = {
   NAME: 'todoname'
@@ -24,8 +26,18 @@ export const TodoForm = ({ isLoading = false, submit }) => {
     reset,
   } = useForm({ defaultValues: defFormValues });
 
-  const onSubmit = (data) => {
-    submit(data, () => reset(defFormValues));
+  const onSubmit = ({ todoname: name }) => {
+    const todo = {
+      id: v4(),
+      name,
+      status: TODO_STATUS.PENDING,
+      createdAt: new Date().toISOString()
+    };
+    submit(todo,
+      {
+        onSuccess: () => reset(defFormValues)
+      }
+    );
   }
 
   return (
@@ -37,7 +49,7 @@ export const TodoForm = ({ isLoading = false, submit }) => {
       spacing={4}
       boxShadow={2}
     >
-      <FormControl isInvalid={!!errors[FIELDS.NAME]}>
+      <FormControl isInvalid={!!errors[FIELDS.NAME]} isDisabled={isLoading}>
         <FormLabel>To Do Name</FormLabel>
         <Input {...register(FIELDS.NAME, { required: 'Wajib diisi!' })} />
         <FormErrorMessage>{errors[FIELDS.NAME]?.message}</FormErrorMessage>

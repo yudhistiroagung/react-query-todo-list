@@ -3,18 +3,13 @@ import { v4 } from 'uuid';
 import { todoStorage } from '../storage/TodoStorage';
 import { TODO_STATUS } from '../constants';
 import { delay } from '../utils';
-const addTodo = async ({ todoname }) => {
-  await delay(500);
-  return todoStorage.add({
-    id: v4(),
-    name: todoname,
-    createdAt: new Date().toISOString(),
-    status: TODO_STATUS.PENDING
-  });
+const addTodo = async (todo) => {
+  await delay(5000);
+  return todoStorage.add(todo);
 };
 
 const getTodos = async () => {
-  await delay(2000);
+  await delay(500);
   return todoStorage.getAll()
 };
 
