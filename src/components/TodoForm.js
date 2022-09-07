@@ -12,16 +12,20 @@ const FIELDS = {
   NAME: 'todoname'
 };
 
+const defFormValues = {
+  [FIELDS.NAME]: ''
+}
+
 export const TodoForm = ({ isLoading = false, submit }) => {
   const {
     handleSubmit,
     register,
     formState: { errors },
-    reset
-  } = useForm();
+    reset,
+  } = useForm({ defaultValues: defFormValues });
 
   const onSubmit = (data) => {
-    submit(data, reset);
+    submit(data, () => reset(defFormValues));
   }
 
   return (
@@ -33,7 +37,7 @@ export const TodoForm = ({ isLoading = false, submit }) => {
       spacing={4}
       boxShadow={2}
     >
-      <FormControl isInvalid={!!errors[FIELDS.NAME]?.message}>
+      <FormControl isInvalid={!!errors[FIELDS.NAME]}>
         <FormLabel>To Do Name</FormLabel>
         <Input {...register(FIELDS.NAME, { required: 'Wajib diisi!' })} />
         <FormErrorMessage>{errors[FIELDS.NAME]?.message}</FormErrorMessage>
@@ -46,7 +50,7 @@ export const TodoForm = ({ isLoading = false, submit }) => {
         onClick={handleSubmit(onSubmit)}
         isLoading={isLoading}
       >
-        Submit
+        Add Todo
       </Button>
     </VStack>
   );

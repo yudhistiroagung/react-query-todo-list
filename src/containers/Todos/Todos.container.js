@@ -54,8 +54,8 @@ const Todos = () => {
                   ))}
                 </Tbody>
               </Table>
-              {isFetching && <Spinner color="red.500" />}
             </TableContainer>
+            {isFetching && <Spinner color="red.500" alignSelf="center" mt={4} />}
           </VStack>
         </HStack>
       </Container>

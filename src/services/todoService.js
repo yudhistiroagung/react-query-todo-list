@@ -2,8 +2,9 @@ import { v4 } from 'uuid';
 
 import { todoStorage } from '../storage/TodoStorage';
 import { TODO_STATUS } from '../constants';
-
+import { delay } from '../utils';
 const addTodo = async ({ todoname }) => {
+  await delay(500);
   return todoStorage.add({
     id: v4(),
     name: todoname,
@@ -13,6 +14,7 @@ const addTodo = async ({ todoname }) => {
 };
 
 const getTodos = async () => {
+  await delay(2000);
   return todoStorage.getAll()
 };
 
