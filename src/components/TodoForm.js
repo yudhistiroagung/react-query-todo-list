@@ -8,6 +8,9 @@ import {
 } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import { TODO_STATUS } from '../constants';
 
 const FIELDS = {
@@ -16,7 +19,15 @@ const FIELDS = {
 
 const defFormValues = {
   [FIELDS.NAME]: ''
-}
+};
+
+const validationSchema = yup.object().shape({
+  [FIELDS.NAME]: yup.string()
+    .matches(/^[A-Z0-9]+$/i, 'Hanya boleh alphabet dan angka')
+    .min(3, 'Minimal 3 karakter')
+    .max(20, 'Maksimal 20 karakter')
+    .required('Wajib diisi!')
+})
 
 export const TodoForm = ({ isLoading = false, submit }) => {
   const {
@@ -24,7 +35,10 @@ export const TodoForm = ({ isLoading = false, submit }) => {
     register,
     formState: { errors },
     reset,
-  } = useForm({ defaultValues: defFormValues });
+  } = useForm({
+    defaultValues: defFormValues,
+    resolver: yupResolver(validationSchema)
+  });
 
   const onSubmit = ({ todoname: name }) => {
     const todo = {
@@ -51,7 +65,7 @@ export const TodoForm = ({ isLoading = false, submit }) => {
     >
       <FormControl isInvalid={!!errors[FIELDS.NAME]} isDisabled={isLoading}>
         <FormLabel>To Do Name</FormLabel>
-        <Input {...register(FIELDS.NAME, { required: 'Wajib diisi!' })} />
+        <Input {...register(FIELDS.NAME)} />
         <FormErrorMessage>{errors[FIELDS.NAME]?.message}</FormErrorMessage>
       </FormControl>
 
