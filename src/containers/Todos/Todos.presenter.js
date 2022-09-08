@@ -29,7 +29,7 @@ const useTodosPresenter = () => {
 
   const submit = (data, options) => mutation.mutate(data, {
     onError: (e, newTodo, context) => {
-      // callbacl to previous todo since the update to server is failed
+      // fallback to previous todo since the update to server is failed
       client.setQueriesData(
         ['todos'],
         context.previousTodos

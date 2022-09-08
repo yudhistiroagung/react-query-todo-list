@@ -7,8 +7,29 @@ import {
   Tr,
   Td,
   Th,
-  Spinner
+  Spinner,
+  Text
 } from '@chakra-ui/react';
+import { TODO_STATUS } from '../constants';
+import { toSimpleDate } from '../utils';
+
+const StatusBadge = ({ status }) => {
+  const color = status === TODO_STATUS.PENDING
+    ? 'yellow.300'
+    : 'green.500';
+  return (
+    <Text
+      bgColor={color}
+      color="whitesmoke"
+      fontWeight="bold"
+      px={2}
+      py={1}
+      borderRadius={4}
+    >
+      {status}
+    </Text>
+  );
+}
 
 export const TodoList = ({ todos = [], isFetching = false }) => {
   return (
@@ -23,11 +44,11 @@ export const TodoList = ({ todos = [], isFetching = false }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {todos?.map(todo => (
-              <Tr key={todo.id}>
-                <Td>{todo.name}</Td>
-                <Td>{todo.createdAt}</Td>
-                <Td>{todo.status}</Td>
+            {todos?.map(({ id, name, createdAt, status }) => (
+              <Tr key={id}>
+                <Td>{name}</Td>
+                <Td>{toSimpleDate(createdAt)}</Td>
+                <Td><StatusBadge status={status} /></Td>
               </Tr>
             ))}
           </Tbody>
