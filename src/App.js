@@ -7,7 +7,10 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import todoWorker from './services/todoWorker';
 import { TodosContainer } from './containers/Todos';
+
+todoWorker.start();
 
 const queryClient = new QueryClient();
 

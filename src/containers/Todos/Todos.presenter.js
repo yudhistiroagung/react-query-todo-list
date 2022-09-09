@@ -9,7 +9,10 @@ import todoService from '../../services/todoService';
 const useTodosPresenter = () => {
   const client = useQueryClient();
 
-  const { data: todos, isLoading, isFetching } = useQuery(['todos'], todoService.getTodos);
+  const { data: todos, isLoading, isFetching } = useQuery(['todos'], todoService.getTodos, {
+    staleTime: 15000,
+    refetchInterval: 6000
+  });
 
   const mutation = useMutation(todoService.addTodo, {
     onMutate: async (newTodo) => {

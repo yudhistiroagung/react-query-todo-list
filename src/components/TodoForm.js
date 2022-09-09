@@ -23,7 +23,7 @@ const defFormValues = {
 
 const validationSchema = yup.object().shape({
   [FIELDS.NAME]: yup.string()
-    .matches(/^[A-Z0-9]+$/i, 'Hanya boleh alphabet dan angka')
+    .matches(/^[a-zA-Z0-9_]*$/, 'Tidak boleh ada karakter khusus')
     .min(3, 'Minimal 3 karakter')
     .max(20, 'Maksimal 20 karakter')
     .required('Wajib diisi!')
