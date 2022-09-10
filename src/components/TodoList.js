@@ -35,11 +35,11 @@ const StatusBadge = ({ status }) => {
 }
 
 export const TodoList = ({ todos = [], isFetching = false }) => {
-  const parent = useRef(null);
+  const tbody = useRef(null);
 
   useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
+    tbody.current && autoAnimate(tbody.current);
+  }, [tbody]);
 
   return (
     <VStack flex={2}>
@@ -52,7 +52,7 @@ export const TodoList = ({ todos = [], isFetching = false }) => {
               <Th>Status</Th>
             </Tr>
           </Thead>
-          <Tbody ref={parent}>
+          <Tbody ref={tbody}>
             {todos?.map(({ id, name, createdAt, status }) => (
               <Tr key={id}>
                 <Td>{name}</Td>
