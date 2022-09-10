@@ -30,20 +30,26 @@ const useTodosPresenter = () => {
     }
   });
 
-  const submit = (data, options) => mutation.mutate(data, {
-    onError: (e, newTodo, context) => {
-      // fallback to previous todo since the update to server is failed
-      client.setQueriesData(
-        ['todos'],
-        context.previousTodos
-      );
-    },
-    onSettled: async () => {
-      // always refetch after success or failed
-      await client.invalidateQueries(['todos']);
-      if (options?.onSuccess) options.onSuccess();
-    }
-  });
+  const submit = (data, options) => {
+    if (options.onMutate) options.onMutate();
+
+    mutation.mutate(data, {
+      onError: (e, newTodo, context) => {
+        console.log('ERROR', e);
+        // fallback to previous todo since the update to server is failed
+        client.setQueriesData(
+          ['todos'],
+          context.previousTodos
+        );
+        if (options?.onError) options.onError(newTodo);
+      },
+      onSettled: async () => {
+        // always refetch after success or failed
+        await client.invalidateQueries(['todos']);
+        if (options?.onSuccess) options.onSuccess();
+      }
+    });
+  };
 
   return {
     todos,

@@ -1,10 +1,14 @@
+import { useState, useEffect } from 'react';
 import {
   VStack,
   FormControl,
   FormLabel,
   Input,
   FormErrorMessage,
-  Button
+  Button,
+  Alert,
+  AlertIcon,
+  AlertDescription
 } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import { useForm } from 'react-hook-form';
@@ -23,18 +27,20 @@ const defFormValues = {
 
 const validationSchema = yup.object().shape({
   [FIELDS.NAME]: yup.string()
-    .matches(/^[a-zA-Z0-9_]*$/, 'Tidak boleh ada karakter khusus')
+    .matches(/^[a-zA-Z0-9_ ]*$/, 'Tidak boleh ada karakter khusus')
     .min(3, 'Minimal 3 karakter')
     .max(20, 'Maksimal 20 karakter')
     .required('Wajib diisi!')
 })
 
 export const TodoForm = ({ isLoading = false, submit }) => {
+  const [error, setError] = useState(false);
   const {
     handleSubmit,
     register,
     formState: { errors },
     reset,
+    setValue
   } = useForm({
     defaultValues: defFormValues,
     resolver: yupResolver(validationSchema)
@@ -45,14 +51,26 @@ export const TodoForm = ({ isLoading = false, submit }) => {
       id: v4(),
       name,
       status: TODO_STATUS.PENDING,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
     submit(todo,
       {
-        onSuccess: () => reset(defFormValues)
-      }
+        onMutate: () => reset(defFormValues),
+        onError: ({ name }) => {
+          setValue(FIELDS.NAME, name);
+          setError(true);
+        }
+      },
     );
   }
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError(false);
+      }, 3000)
+    }
+  }, [error]);
 
   return (
     <VStack
@@ -63,6 +81,13 @@ export const TodoForm = ({ isLoading = false, submit }) => {
       spacing={4}
       boxShadow={2}
     >
+      {error && (
+        <Alert status='error'>
+          <AlertIcon />
+          <AlertDescription>Failed to add new todo!</AlertDescription>
+        </Alert>
+      )}
+
       <FormControl isInvalid={!!errors[FIELDS.NAME]} isDisabled={isLoading}>
         <FormLabel>To Do Name</FormLabel>
         <Input {...register(FIELDS.NAME)} />

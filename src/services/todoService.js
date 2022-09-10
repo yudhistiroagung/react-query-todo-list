@@ -2,7 +2,7 @@ import { todoStorage } from '../storage/TodoStorage';
 import { delay } from '../utils';
 
 const addTodo = async (todo) => {
-  await delay(1000);
+  await delay(2000);
   // throw new Error('An Error occured');
   return todoStorage.add(todo);
 };
