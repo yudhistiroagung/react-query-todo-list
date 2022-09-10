@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import {
   VStack,
   Table,
@@ -10,6 +11,8 @@ import {
   Spinner,
   Text
 } from '@chakra-ui/react';
+import autoAnimate from '@formkit/auto-animate';
+
 import { TODO_STATUS } from '../constants';
 import { toSimpleDate } from '../utils';
 
@@ -32,6 +35,12 @@ const StatusBadge = ({ status }) => {
 }
 
 export const TodoList = ({ todos = [], isFetching = false }) => {
+  const parent = useRef(null);
+
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, [parent]);
+
   return (
     <VStack flex={2}>
       <TableContainer>
@@ -43,7 +52,7 @@ export const TodoList = ({ todos = [], isFetching = false }) => {
               <Th>Status</Th>
             </Tr>
           </Thead>
-          <Tbody>
+          <Tbody ref={parent}>
             {todos?.map(({ id, name, createdAt, status }) => (
               <Tr key={id}>
                 <Td>{name}</Td>
